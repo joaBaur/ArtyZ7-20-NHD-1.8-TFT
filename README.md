@@ -66,8 +66,8 @@ plus the free Diligent IP for Vivado from Github:
        DB7 16   IO7  
      LED-A 17   3V3  
     LED-K1 18   GND   
-    LED-K2 19   GND 
-     	GND 20   GND
+    LED-K2 19   GND  
+       GND 20   GND  
      NC/YU 21   - 
      NC/XL 22   - 
      NC/YD 23   - 
