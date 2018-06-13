@@ -131,7 +131,3 @@ when switched off, a full screen red-green-blue sequence is shown on the tft
 ## Offsetting the TFT display area
 
 The 128x160 pixel area that is output to the TFT has its origin by default at the upper left corner (0/0) of the HDMI frame. If you want to move the area to some other location within the HDMI frame, you can change the values of the constants `h_start` and `v_start` in the VideoProcessing.vhd file at line numbers 42 and 46 respectively.
-
-## Issue with the MADCTRL init parameter
-
-I have an issue with the initialization sequence for the TFT in my test setup here - no matter what value I pass to the MADCTRL (Memory Access Control) register 36h, the orientation and mirroring of the image on the TFT does not change, nor does the RGB ordering. So I hardcoded a mirroring into the NHD_18_128160EF.vhd for the image to appear correctly oriented and not mirrored. No idea why the MADCTL does not do anything, other init commands are applied correctly.

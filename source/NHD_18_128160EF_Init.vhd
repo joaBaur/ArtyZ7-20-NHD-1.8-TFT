@@ -354,12 +354,9 @@ begin
                         next_state <= Madctrl_1;
 
                     when Madctrl_1 =>
-                        -- DATA 0xC8 MADCTRL
-                        -- MADCTRL does not seem to work on my system
-                        -- no rotation or screen mirroring regardless of the value I pass here
-                        -- so I just leave it at the default (0) after a reset
+                        -- DATA 0x48 MADCTRL
                         dc_reg <= DC_DATA;
-                        db_reg <= x"00";
+                        db_reg <= x"48";
                         curr_state <= SendToDisplayDriver;
                         next_state <= Colmod;
 
@@ -371,7 +368,7 @@ begin
                         next_state <= Colmod_1;
 
                     when Colmod_1 =>
-                        -- DATA 0xE6 COLMOD
+                        -- DATA 0x66 COLMOD
                         dc_reg <= DC_DATA;
                         db_reg <= x"66";
                         curr_state <= SendToDisplayDriver;

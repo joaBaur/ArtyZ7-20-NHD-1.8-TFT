@@ -163,9 +163,7 @@ begin
 
                             -- don't set a new ram address during the last loop iteration when curr_col = 160
                             if curr_col < 160 then
-                                -- had to mirror curr_col here, because the MADCTRL setting in the init sequence
-                                -- does not work and so cannot rotate/mirror the screen image
-                                ram_address := curr_row * 160 + (159-curr_col);
+                                ram_address := curr_row * 160 + curr_col;
                                 bram_addrb <= conv_std_logic_vector(ram_address, bram_addrb'length);
                             end if;
                             
@@ -180,10 +178,9 @@ begin
                                 dc_reg <= DC_DATA;
 
                                 -- vid_data byte order is R/B/G, not R/G/B!
-                                -- byte order for TFT is B/G/R, so start with blue
-                                db_reg <= vid_data(15 downto 8); -- blue byte
-                                
-                                curr_state <= Send_B_ToDisplayDriver;
+                                -- byte order for TFT is R/G/B so start with red
+                                db_reg <= vid_data(23 downto 16); -- red byte
+                                curr_state <= Send_R_ToDisplayDriver;
                                 next_state <= TftDisplayFrame;
                             end if;
                             
@@ -219,9 +216,9 @@ begin
                                 vid_data := x"00FF00"; -- blue
                             end if;
 
-                            -- byte order for TFT is B/G/R, so start with blue
-                            db_reg <= vid_data(15 downto 8); -- blue byte
-                            curr_state <= Send_B_ToDisplayDriver;
+                            -- byte order for TFT is R/G/B, so start with red
+                            db_reg <= vid_data(23 downto 16); -- red byte
+                            curr_state <= Send_R_ToDisplayDriver;
                             next_state <= TftDisplayFrame;
 
                             curr_col := curr_col + 1;
@@ -258,8 +255,8 @@ begin
                             curr_state <= WaitForDisplayDriver;
                         end if;
                         
-                    when Send_B_ToDisplayDriver =>
-                        -- blue byte is already in db_reg
+                    when Send_R_ToDisplayDriver =>
+                        -- red byte is already in db_reg
                         if ready_driver = '1' then
                            ws_reg <= '1';
                            curr_state <= Send_G_ToDisplayDriver;
@@ -270,13 +267,13 @@ begin
                         if ready_driver = '1' and last_ready_driver = '0' then
                             db_reg <= vid_data(7 downto 0); -- green byte
                             ws_reg <= '1';
-                            curr_state <= Send_R_ToDisplayDriver;
+                            curr_state <= Send_B_ToDisplayDriver;
                         end if;
                         
-                    when Send_R_ToDisplayDriver =>
+                    when Send_B_ToDisplayDriver =>
                         ws_reg <= '0';
                         if ready_driver = '1' and last_ready_driver = '0' then
-                            db_reg <= vid_data(23 downto 16); -- red byte
+                            db_reg <= vid_data(15 downto 8); -- blue byte
                             ws_reg <= '1';
                             curr_state <= WaitForDisplayDriver;
                          end if;
